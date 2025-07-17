@@ -9,12 +9,12 @@ export async function GET() {
         'Content-Type': 'application/json',
         'accept-version': '2.0.0',
       },
+      cache: 'no-store',
     }
   );
 
   const json = await res.json();
 
-  // Extract the dealer names
   const names = json.items.map((item) => item.fieldData.name);
 
   return Response.json(names);
