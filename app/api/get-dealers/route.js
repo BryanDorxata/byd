@@ -28,7 +28,6 @@ export async function GET() {
     groupedByRegion[regionId].push(name);
   });
 
-  // Optional: Sort the names alphabetically within each region
   for (const regionId in groupedByRegion) {
     groupedByRegion[regionId].sort(); // Sorts the array of names in place
   }
