@@ -15,7 +15,33 @@ export async function GET() {
 
   const json = await res.json();
 
-  const names = json.items.map((item) => item.fieldData.name);
+  // Create an array of objects, each containing the name and region
+  const itemsWithRegion = json.items.map((item) => ({
+    name: item.fieldData.name,
+    region: item.fieldData.region,
+  }));
 
-  return Response.json(names);
+  // Sort the array. First by region, then by name.
+  itemsWithRegion.sort((a, b) => {
+    // Sort by region first
+    if (a.region < b.region) {
+      return -1;
+    }
+    if (a.region > b.region) {
+      return 1;
+    }
+    // If regions are the same, sort by name
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+    return 0; // If both region and name are the same
+  });
+
+  // Extract only the names in the sorted order
+  const sortedNames = itemsWithRegion.map((item) => item.name);
+
+  return Response.json(sortedNames);
 }
