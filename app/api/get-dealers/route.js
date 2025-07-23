@@ -15,33 +15,26 @@ export async function GET() {
 
   const json = await res.json();
 
-  // Create an array of objects, each containing the name and region
-  const itemsWithRegion = json.items.map((item) => ({
-    name: item.fieldData.name,
-    region: item.fieldData.region,
-  }));
+  // Initialize an empty object to store the grouped data
+  const groupedByRegion = {};
 
-  // Sort the array. First by region, then by name.
-  itemsWithRegion.sort((a, b) => {
-    // Sort by region first
-    if (a.region < b.region) {
-      return -1;
+  json.items.forEach((item) => {
+    const regionId = item.fieldData.region;
+    const name = item.fieldData.name;
+
+    // If the region ID doesn't exist as a key yet, create an empty array for it
+    if (!groupedByRegion[regionId]) {
+      groupedByRegion[regionId] = [];
     }
-    if (a.region > b.region) {
-      return 1;
-    }
-    // If regions are the same, sort by name
-    if (a.name < b.name) {
-      return -1;
-    }
-    if (a.name > b.name) {
-      return 1;
-    }
-    return 0; // If both region and name are the same
+
+    // Add the name to the array corresponding to its region ID
+    groupedByRegion[regionId].push(name);
   });
 
-  // Extract only the names in the sorted order
-  const sortedNames = itemsWithRegion.map((item) => item.name);
+  // Optional: Sort the names alphabetically within each region
+  for (const regionId in groupedByRegion) {
+    groupedByRegion[regionId].sort(); // Sorts the array of names in place
+  }
 
-  return Response.json(sortedNames);
+  return Response.json(groupedByRegion);
 }
