@@ -15,19 +15,16 @@ export async function GET() {
 
   const json = await res.json();
 
-  // Initialize an empty object to store the grouped data
   const groupedByRegion = {};
 
   json.items.forEach((item) => {
     const regionId = item.fieldData.region;
     const name = item.fieldData.name;
 
-    // If the region ID doesn't exist as a key yet, create an empty array for it
     if (!groupedByRegion[regionId]) {
       groupedByRegion[regionId] = [];
     }
 
-    // Add the name to the array corresponding to its region ID
     groupedByRegion[regionId].push(name);
   });
 
